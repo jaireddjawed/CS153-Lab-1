@@ -103,6 +103,11 @@ int             pipewrite(struct pipe*, char*, int);
 
 //PAGEBREAK: 16
 // proc.c
+
+/*
+ * changed argument variable types for wait() added waitpid() function prototype
+*/
+
 int             cpuid(void);
 void            exit(int);
 int             fork(void);
@@ -117,7 +122,8 @@ void            sched(void);
 void            setproc(struct proc*);
 void            sleep(void*, struct spinlock*);
 void            userinit(void);
-int             wait(void);
+int             wait(int*);
+int             waitpid(int, int*, int);
 void            wakeup(void*);
 void            yield(void);
 

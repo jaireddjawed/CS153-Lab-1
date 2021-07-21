@@ -2,9 +2,18 @@ struct stat;
 struct rtcdate;
 
 // system calls
+
+/*
+  * Changed function protypes to match the new arguments being passed to
+  * exit(), wait()
+  * added waitpid() function prototype
+*/
+
 int fork(void);
 int exit(int) __attribute__((noreturn));
-int wait(void);
+int wait(int*);
+int waitpid(int, int*, int);
+
 int pipe(int*);
 int write(int, const void*, int);
 int read(int, void*, int);
