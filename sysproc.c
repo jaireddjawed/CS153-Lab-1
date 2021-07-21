@@ -16,20 +16,54 @@ sys_fork(void)
 int
 sys_exit(void)
 {
-  int status;
-  if(argint(0, &status) < 0) 
-  {
+  int exitStatus;
+
+  // check that the pointer to the buffer is valid
+  // retrieves first argument in system call and make sure the result is not negative
+  if(argint(0, &exitStatus) < 0) {
 	  return -1;
   }
-  exit(status);
+
+  cprintf("sys_exit: (outside if) %d\n", exitStatus);
+
+  exit(exitStatus);
   return 0;  // not reached
 }
 
 int
 sys_wait(void)
 {
-  return wait();
+  int* waitStatus;
+
+  if (argptr(0, (void*)&waitStatus, sizeof(waitStatus)) < 0) {
+    return -1;
+  }
+
+  return wait(waitStatus);
 }
+
+int sys_waitpid(void) {
+  int pid;
+  int* waitPidStatus;
+  int options = 0;
+
+  // retrives first, second and third system call arguments to verify that the result is not negative
+  if (
+    argint(0, &pid) < 0 ||
+    argptr(1, (void*) &waitPidStatus, sizeof(waitPidStatus)) < 0 ||
+    argint(2, &options) < 0
+  )
+  {
+    return -1;
+  }
+
+  return waitpid(
+    pid,
+    waitPidStatus,
+    options
+  );
+}
+
 
 int
 sys_kill(void)
