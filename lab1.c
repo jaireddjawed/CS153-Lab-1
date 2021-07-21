@@ -46,17 +46,36 @@ int exitAndWaitTests(void) {
 }
 
 int waitpidTests(void) {
-  int pid = fork();
-  int status;
-  int returnPid;
+  int totalPids = 2;
 
-  if (pid == 0) {
-    printf(1, "\nThis is child with pid  number (%d) and it will exit with status %d.\n", getpid(), 0);
-    exit(0);
+  int pids[totalPids];
+  int returnPid, status;
+
+  int i = 0;
+
+  while (i < totalPids) {
+    pids[i] = fork();
+
+    // child runs this
+    if (pids[i] == 0) {
+      printf(1, "\n This is the child with pid number (%d) and it will exit with status %d.\n", getpid(), 0);
+      exit(0);
+    }
+
+    i++;
   }
 
-  returnPid = waitpid(pid, &status, 0);
-  printf(1, "\n This is the parent of child with pid number (%d) and it has exited with status %d. \n", returnPid, status);
+  int j = 0;
+
+  while (j < totalPids) {
+    // parent runs this
+    if (pids[j] > 0) {
+      returnPid = waitpid(pids[j], &status, 0);
+      printf(1, "\n This is the parent of the child with pid number (%d) and the child has exited with status %d.\n", returnPid, status);
+    }
+
+    j++;
+  }
 
   return 1;
 }
@@ -66,7 +85,7 @@ int main(int argc, char* argv[]) {
   printf(1, "\n---------------------\n");
 
 
-  printf(1, "\nExit Tests!\n");
+  printf(1, "\nExit and Wait Tests!\n");
   printf(1, "\n---------------------\n");
   exitAndWaitTests();
 
